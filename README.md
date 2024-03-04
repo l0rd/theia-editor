@@ -16,7 +16,24 @@ IMAGE_NAME=quay.io/mloriedo/theia-editor:latest
 docker build -t ${IMAGE_NAME} . && docker push ${IMAGE_NAME}
 ```
 
-## Usage
+## Usage with DW and DWT definition
+
+```
+# Create the DevWorkspacesTemplate that contains Theia definition
+kubectl apply -f ./dwt.yaml
+
+# Create the CDE
+kubectl apply -f ./dw-sample.yaml
+
+# Wait for the workspace to be ready
+kubectl wait --for=condition=Ready dw/dw --timeout=300s
+
+# Retrieve the IDE URL
+export IDE=`kubectl get dw dw -o jsonpath={.status.mainUrl}` && \
+printf "\nOpen VS Code in your browser with the following link:\n\n\t${IDE}\n\n"
+```
+
+## Usage with URL params
 
 Create a CDE using Theia as the editor with the `image` and `che-editor` URL parameters:
 
@@ -25,9 +42,11 @@ Create a CDE using Theia as the editor with the `image` and `che-editor` URL par
 For example: 
 https://workspaces.openshift.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml 
 
-https://che-dogfooding.apps.che-dev.x6e0.p1.openshiftapps.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml
+https://che-dogfooding.apps.che-dev.x6e0.p1.openshiftapps.com/f?url=https://github.com/l0rd/quarkus-api&image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml
 
 :warning: the `image` parameter is required because the CDE dev tooling container image is required to have libc v3 and not v1 (the default UDI doesn't work).
+
+## Debugging Theia
 
 Look at the startup logs in `/editor/startup-logs.txt`:
 
@@ -72,6 +91,7 @@ Configuring to accept webviews on '^.+\.webview\..+$' hostname.
 
 ## Things to fix
 
+- Doesn't work with `che-editor` URL parameter 
 - Only works with libc v3 images (doesn't work with current universal developer image that is based on UBI8)
 - Errors in /editor/startup-logs.txt: "EACCES: permission denied, mkdir '/home/user/.theia-ide'"
 - No idling for inactivity
