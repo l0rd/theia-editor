@@ -1,0 +1,60 @@
+inline:
+  schemaVersion: 2.2.0
+  metadata:
+    name: Eclipse Theia
+  components:
+    - name: editor-injector
+      container:
+        image: quay.io/mloriedo/theia-editor:latest
+        command:
+          - /editor-copy.sh
+        volumeMounts:
+          - name: editor-folder
+            path: /editor
+        memoryLimit: 128Mi
+        memoryRequest: 32Mi
+        cpuLimit: 500m
+        cpuRequest: 30m
+    - name: editor-contrib
+      attributes:
+        app.kubernetes.io/component: theia-contrib
+        app.kubernetes.io/part-of: theia.eclipse.org
+        controller.devfile.io/container-contribution: true
+      container:
+        image: noop/will/be/ignored
+        volumeMounts:
+          - name: editor-folder
+            path: /editor
+        memoryLimit: 1024Mi
+        memoryRequest: 256Mi
+        cpuLimit: 500m
+        cpuRequest: 30m
+        env:
+          - name: CODE_HOST
+            value: '0.0.0.0'
+        endpoints:
+          - name: editor
+            attributes:
+              type: main
+              cookiesAuthEnabled: true
+              discoverable: false
+              urlRewriteSupported: true
+            targetPort: 3000
+            exposure: public
+            secure: false
+            protocol: https
+    - name: editor-folder
+      volume: {ephemeral: true}
+  events:
+    preStart:
+      - editor-injector-command
+    postStart:
+      - editor-startup-command
+  commands:
+    - id: editor-injector-command
+      apply:
+        component: editor-injector
+    - id: editor-startup-command
+      exec:
+        component: editor-contrib
+        commandLine: 'nohup /editor/startup.sh > /editor/startup-logs.txt 2>&1 &'
