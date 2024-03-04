@@ -2,6 +2,8 @@
 
 Files to build and run Eclipse Theia as the editor of an Eclipse Che Cloud Development Environment.
 
+![alt text](preview.png)
+
 ## Building the Theia Container Image
 
 ```bash
@@ -13,15 +15,17 @@ docker push ${IMAGE_NAME}
 
 ## Usage with DW and DWT definition
 
+Replace the `editor-injector` component image in `kube/dwt.yaml` with the one built above and then run the following commands to create a sample CDE with Theia as the editor:
+
 ```bash
 # Create the DevWorkspacesTemplate that contains Theia definition
-kubectl apply -f ./dwt.yaml
+kubectl apply -f .kube/dwt.yaml
 
-# Create the CDE
-kubectl apply -f ./dw-sample.yaml
+# Create the sample CDE
+kubectl apply -f ./kube/dw.yaml
 
 # Wait for the workspace to be ready
-kubectl wait --for=condition=Ready dw/dw --timeout=300s
+kubectl wait --for=condition=Ready dw/sample-dw --timeout=300s
 
 # Retrieve the IDE URL
 export IDE=`kubectl get dw dw -o jsonpath={.status.mainUrl}` && \
@@ -35,8 +39,8 @@ Create a CDE using Theia as the editor with the `image` and `che-editor` URL par
 `https://<che-host>/#<git-repo>?image=<devtools-image>&che-editor=<editor-definition-raw-url>`
 
 For example:
-- https://workspaces.openshift.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml 
-- https://che-dogfooding.apps.che-dev.x6e0.p1.openshiftapps.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml
+- [![devsandbox](https://img.shields.io/static/v1?label=dev%20sandbox&message=vscode&logo=eclipseche&color=FDB940&labelColor=525C86)](https://workspaces.openshift.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml)
+- [![dogfooding](https://img.shields.io/static/v1?label=dogfooding%20%20%20%20&message=vscode&logo=eclipseche&color=FDB940&labelColor=525C86)](https://che-dogfooding.apps.che-dev.x6e0.p1.openshiftapps.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml)
 
 :warning: the `image` parameter is required because the CDE dev tooling container image is required to have libc v3 and not v1 (the default UDI doesn't work).
 
@@ -85,13 +89,14 @@ Configuring to accept webviews on '^.+\.webview\..+$' hostname.
 
 ## Things to fix
 
-- Doesn't work with `che-editor` URL parameter 
+- Dogfooding link doesn't work
 - Only works with libc v3 images (doesn't work with current universal developer image that is based on UBI8)
 - Errors in /editor/startup-logs.txt: "EACCES: permission denied, mkdir '/home/user/.theia-ide'"
 - No idling for inactivity
 - No multi-project support
 - No out of the box syntax highlighting for Java
 - Should we set the `--app-project-path` to something other than `/editor/`?
+- VS Code extension fail to install (probably related to the permission denied problem)
 
 ## License
 
