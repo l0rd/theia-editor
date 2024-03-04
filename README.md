@@ -34,10 +34,9 @@ Create a CDE using Theia as the editor with the `image` and `che-editor` URL par
 
 `https://<che-host>/#<git-repo>?image=<devtools-image>&che-editor=<editor-definition-raw-url>`
 
-For example: 
-https://workspaces.openshift.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml 
-
-https://che-dogfooding.apps.che-dev.x6e0.p1.openshiftapps.com/f?url=https://github.com/l0rd/quarkus-api&image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml
+For example:
+- https://workspaces.openshift.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml 
+- https://che-dogfooding.apps.che-dev.x6e0.p1.openshiftapps.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml
 
 :warning: the `image` parameter is required because the CDE dev tooling container image is required to have libc v3 and not v1 (the default UDI doesn't work).
 
