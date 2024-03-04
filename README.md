@@ -2,23 +2,18 @@
 
 Files to build and run Eclipse Theia as the editor of an Eclipse Che Cloud Development Environment.
 
-## Table of Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-
 ## Building the Theia Container Image
 
 ```bash
 IMAGE_NAME=quay.io/mloriedo/theia-editor:latest
-docker build -t ${IMAGE_NAME} . && docker push ${IMAGE_NAME}
+
+docker build -t ${IMAGE_NAME} . && \
+docker push ${IMAGE_NAME}
 ```
 
 ## Usage with DW and DWT definition
 
-```
+```bash
 # Create the DevWorkspacesTemplate that contains Theia definition
 kubectl apply -f ./dwt.yaml
 
