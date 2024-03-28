@@ -38,9 +38,9 @@ Create a CDE using Theia as the editor with the `image` and `che-editor` URL par
 
 `https://<che-host>/#<git-repo>?image=<devtools-image>&che-editor=<editor-definition-raw-url>`
 
-For example:
-- [![devsandbox](https://img.shields.io/static/v1?label=dev%20sandbox&message=vscode&logo=eclipseche&color=FDB940&labelColor=525C86)](https://workspaces.openshift.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml)
-- [![dogfooding](https://img.shields.io/static/v1?label=dogfooding%20%20%20%20&message=vscode&logo=eclipseche&color=FDB940&labelColor=525C86)](https://che-dogfooding.apps.che-dev.x6e0.p1.openshiftapps.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml)
+For example these links start a CDE that [uses Theia definition provided in this repository](https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml) and the image quay.io/mloriedo/cloud-dev-images:ubi9 as the developer container (Theia requires an UBI v9 based container):
+- [![devsandbox](https://img.shields.io/static/v1?label=dev%20sandbox&message=theia&logo=eclipseche&color=FDB940&labelColor=525C86)](https://workspaces.openshift.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml) on the Che instance hosted on Red Hat developer sandbox
+- [![dogfooding](https://img.shields.io/static/v1?label=dogfooding%20%20%20%20&message=theia&logo=eclipseche&color=FDB940&labelColor=525C86)](https://che-dogfooding.apps.che-dev.x6e0.p1.openshiftapps.com/#https://github.com/l0rd/quarkus-api?image=quay.io/mloriedo/cloud-dev-images:ubi9&che-editor=https://raw.githubusercontent.com/l0rd/theia-editor/main/definition.yaml) on the internal Che instance used by Che maintainers
 
 :warning: the `image` parameter is required because the CDE dev tooling container image is required to have libc v3 and not v1 (the default UDI doesn't work).
 
